@@ -15,8 +15,6 @@ import {
   ProfileSetting
 } from '../views'
 
-import * as Contest from '@oj/views/contest'
-
 export default [
   {
     name: 'home',
@@ -87,20 +85,8 @@ export default [
   {
     name: 'contest-details',
     path: '/contest/:contestID/',
-    component: Contest.ContestDetails,
-    meta: { title: 'Contest Details' },
-    children: [
-      {
-        name: 'contest-submission-list',
-        path: 'submissions',
-        component: SubmissionList
-      },
-      {
-        name: 'contest-announcement-list',
-        path: 'announcements',
-        component: AnnouncementList
-      }
-    ]
+    component: ContestDetail,
+    meta: { title: 'Contest Details' }
   },
   {
     name: 'profile-setting',
