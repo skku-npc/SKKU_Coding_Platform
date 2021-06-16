@@ -15,6 +15,8 @@ import {
   ProfileSetting
 } from '../views'
 
+import * as Contest from '@oj/views/contest'
+
 export default [
   {
     name: 'home',
@@ -101,22 +103,10 @@ export default [
     ]
   },
   {
+    name: 'profile-setting',
     path: '/setting',
-    component: Setting.Settings,
-    children: [
-      {
-        name: 'default-setting',
-        path: '',
-        meta: { requiresAuth: true, title: 'Default Settings' },
-        component: Setting.ProfileSetting
-      },
-      {
-        name: 'profile-setting',
-        path: 'profile',
-        meta: { requiresAuth: true, title: 'Profile Settings' },
-        component: Setting.ProfileSetting
-      }
-    ]
+    meta: { title: 'Profile Settings' },
+    component: ProfileSetting
   },
   {
     path: '*',
