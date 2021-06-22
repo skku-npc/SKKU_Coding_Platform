@@ -212,7 +212,7 @@ export default {
     }
   },
   methods: {
-    saveContest () {
+    async saveContest () {
       this.setStartTime()
       this.setEndTime()
       const funcName = this.$route.name === 'edit-contest' ? 'editContest' : 'createContest'
@@ -224,8 +224,8 @@ export default {
         }
       }
       data.allowed_ip_ranges = ranges
-      api[funcName](data).then(res => {
-        this.$router.push({ name: 'contest-list', query: { refresh: 'true' } })
+      await api[funcName](data).then(async res => {
+        await this.$router.push({ name: 'contest-list', query: { refresh: 'true' } })
       }).catch(() => {
       })
     },

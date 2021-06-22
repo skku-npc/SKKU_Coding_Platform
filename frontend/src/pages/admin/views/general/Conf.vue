@@ -249,8 +249,8 @@ export default {
       websiteConfig: {}
     }
   },
-  mounted () {
-    api.getSMTPConfig().then(res => {
+  async mounted () {
+    await api.getSMTPConfig().then(res => {
       if (res.data.data) {
         this.smtp = res.data.data
       } else {
@@ -258,20 +258,20 @@ export default {
         this.$warning('Please setup SMTP config at first')
       }
     })
-    api.getWebsiteConfig().then(res => {
+    await api.getWebsiteConfig().then(res => {
       this.websiteConfig = res.data.data
     }).catch(() => {
     })
   },
   methods: {
-    saveSMTPConfig () {
+    async saveSMTPConfig () {
       if (!this.init) {
-        api.editSMTPConfig(this.smtp).then(() => {
+        await api.editSMTPConfig(this.smtp).then(() => {
           this.saved = true
         }, () => {
         })
       } else {
-        api.createSMTPConfig(this.smtp).then(() => {
+        await api.createSMTPConfig(this.smtp).then(() => {
           this.saved = true
         }, () => {
         })
@@ -290,7 +290,7 @@ export default {
         }
       }).then((value) => {
         this.loadingBtnTest = true
-        api.testSMTPConfig(value).then(() => {
+        await api.testSMTPConfig(value).then(() => {
           this.loadingBtnTest = false
         }, () => {
           this.loadingBtnTest = false
@@ -298,8 +298,8 @@ export default {
       }).catch(() => {
       })
     },
-    saveWebsiteConfig () {
-      api.editWebsiteConfig(this.websiteConfig).then(() => {
+    async saveWebsiteConfig () {
+      await api.editWebsiteConfig(this.websiteConfig).then(() => {
       }).catch(() => {
       })
     }
