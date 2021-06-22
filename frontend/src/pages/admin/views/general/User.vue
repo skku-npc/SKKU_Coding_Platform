@@ -439,31 +439,36 @@ export default {
       this.handleUsersCSV(this.uploadUsersFile)
     }
   },
-  mounted () {
-    this.getUserList(1)
+  async mounted () {
+    await this.getUserList(1)
   },
   methods: {
-    currentChange (page) {
+    // 페이지 번호 콜백 전환
+    async currentChange (page) {
       this.currentPage = page
-      this.getUserList(page)
+      await this.getUserList(page)
     },
-    saveUser () {
-      api.editUser(this.user).then(res => {
-        this.getUserList(this.currentPage)
+    // 사용자 정보 수정을 위해 제출
+    async saveUser () {
+      await api.editUser(this.user).then(async res => {
+        // 업데이트 목록
+        await this.getUserList(this.currentPage)
       }).then(() => {
         this.showUserDialog = false
       }).catch(() => {
       })
     },
-    openUserDialog (id) {
+    // 사용자 대화 상자 열기
+    async openUserDialog (id) {
       this.showUserDialog = true
-      api.getUser(id).then(res => {
+      await api.getUser(id).then(res => {
         this.user = res.data.data
       })
     },
-    getUserList (page) {
+    // 사용자 목록 가져 오기
+    async getUserList (page) {
       this.loadingTable = true
-      api.getUserList((page - 1) * this.pageSize, this.pageSize, this.keyword).then(res => {
+      await api.getUserList((page - 1) * this.pageSize, this.pageSize, this.keyword).then(res => {
         this.loadingTable = false
         this.total = res.data.data.total
         this.userList = res.data.data.results
@@ -472,13 +477,13 @@ export default {
       })
     },
     deleteUsers (ids) {
-      this.$confirm('Sure to delete the user? The associated resources created by this user will be deleted as well, like problem, contest, announcement, etc.', 'confirm', 'warning', false
-      ).then(() => {
-        api.deleteUsers(ids.join(',')).then(res => {
-          this.getUserList(this.currentPage)
+     this.$confirm('Sure to delete the user? The associated resources created by this user will be deleted as well, like problem, contest, announcement, etc.', 'confirm', 'warning', false
+      ).then(async () => {
+        await api.deleteUsers(ids.join(',')).then(async res => {
+          await this.getUserList(this.currentPage)
           this.selectedUserIDs = []
-        }).catch(() => {
-          this.getUserList(this.currentPage)
+        }).catch(async () => {
+          await this.getUserList(this.currentPage)
           this.selectedUserIDs = []
         })
       }, () => {
@@ -486,13 +491,15 @@ export default {
     },
     generateUser () {
       const data = Object.assign({}, this.formGenerateUser)
-      api.generateUser(data).then(res => {
+      await api.generateUser(data).then(async res => {
+        this.loadingGenerate = false
         const url = '/admin/generate_user?file_id=' + res.data.data.file_id
         utils.downloadFile(url).then(() => {
           this.$alert('All users created successfully, the users sheets have downloaded to your disk.', 'Notice')
         })
-        this.getUserList(1)
+        await this.getUserList(1)
       }).catch(() => {
+        this.loadingGenerate = false
       })
     },
     compareNumber (start, end) {
@@ -519,9 +526,9 @@ export default {
         }
       })
     },
-    handleUsersUpload () {
-      api.importUsers(this.uploadUsers).then(res => {
-        this.getUserList(1)
+    async handleUsersUpload () {
+      await api.importUsers(this.uploadUsers).then(async res => {
+        await this.getUserList(1)
         this.handleResetData()
       }).catch(() => {
       })
