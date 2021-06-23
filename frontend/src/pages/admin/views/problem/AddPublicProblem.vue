@@ -75,15 +75,17 @@ export default {
       this.getPublicProblem(this.page)
     }
   },
-  mounted () {
-    api.getContest(this.contestID).then(res => {
+  async mounted () {
+    try {
+      const res = api.getContest(this.contestID)
       this.contest = res.data.data
       this.getPublicProblem()
-    }).catch(() => {
-    })
+    } catch (err) {
+    }
   },
   methods: {
     async getPublicProblem (page) {
+      this.loading = true
       const params = {
         keyword: this.keyword,
         offset: (page - 1) * this.limit,
