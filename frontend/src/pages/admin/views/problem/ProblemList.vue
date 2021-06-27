@@ -217,7 +217,7 @@ export default {
           problem.isEditing = false
         }
         this.problemList = res.data.data.results
-      } catch(err) {
+      } catch(res) {
         this.loading = false
       }
     },
@@ -229,18 +229,18 @@ export default {
           await api[funcName](id)
           try{
             await this.getProblemList(this.currentPage - 1)
-          } catch(err) {
+          } catch(res) {
           }
-        } catch(err) {
+        } catch(res) {
         }
-      } catch(err) {
+      } catch(res) {
       }
     },
     async makeContestProblemPublic (problemID) {
       try{
         const value = await this.$prompt('Please input display id for the public problem', 'confirm')
         await api.makeContestProblemPublic({ id: problemID, display_id: value }).catch()
-      } catch(err) {
+      } catch(res) {
       }
     },
     async updateProblem (row) {
@@ -256,7 +256,7 @@ export default {
         await api[fucnName](data)
         this.InlineEditDialogVisible = false
         this.getProblemList(this.currentPage)
-      } catch(err) {
+      } catch(res) {
         this.InlineEditDialogVisible = false
       }
     },

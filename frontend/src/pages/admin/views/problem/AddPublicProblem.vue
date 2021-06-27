@@ -80,7 +80,7 @@ export default {
       const res = api.getContest(this.contestID)
       this.contest = res.data.data
       this.getPublicProblem()
-    } catch (err) {
+    } catch (res) {
     }
   },
   methods: {
@@ -94,9 +94,10 @@ export default {
       }
       try {
         const results = await api.getProblemList(params)
+        this.loading = false
         this.total = results.data.data.total
         this.problems = results.data.data.results
-      } catch (error) {
+      } catch (res) {
       }
     },
     async handleAddProblem () {
@@ -108,7 +109,7 @@ export default {
       try {
         await api.addProblemFromPublic(data)
         this.$emit('on-change')
-      } catch (error) {
+      } catch (res) {
       }
     },
     showConfirmModal (problemID) {
