@@ -602,26 +602,26 @@ export default {
       addTag(search)
       this.search = ''
     },
-    switchSpj () {
+    async switchSpj () {
       if (this.testCaseUploaded) {
-        this.$confirm('If you change problem judge method, you need to re-upload test cases', 'Warning', 'warning', false
-        ).then(() => {
+        try{
+          await this.$confirm('If you change problem judge method, you need to re-upload test cases', 'Warning', 'warning', false)
           this.problem.spj = !this.problem.spj
           this.resetTestCase()
-        }).catch(() => {
-        })
+        } catch(res) {
+        }
       } else {
         this.problem.spj = !this.problem.spj
       }
     },
-    switchTestcase () {
+    async switchTestcase () {
       if (this.testCaseUploaded) {
-        this.$confirm('If you change upload method, you need to re-upload testcases', 'Warning', 'warning', false
-        ).then(() => {
+        try{
+          await this.$confirm('If you change upload method, you need to re-upload testcases', 'Warning', 'warning', false)
           this.testcase_file_upload = !this.testcase_file_upload
           this.resetTestCase()
-        }).catch(() => {
-        })
+        } catch(res) {
+        }
       } else {
         this.testcase_file_upload = !this.testcase_file_upload
       }
