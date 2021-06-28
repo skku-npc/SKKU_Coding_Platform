@@ -191,11 +191,12 @@ export default {
       endDate: ''
     }
   },
-  mounted () {
+  async mounted () {
     if (this.$route.name === 'edit-contest') {
       this.title = 'Edit Contest'
       this.disableRuleType = true
-      api.getContest(this.$route.params.contestId).then(res => {
+      try {
+        const res = await api.getContest(this.$route.params.contestId)
         const data = res.data.data
         const ranges = []
         for (const v of data.allowed_ip_ranges) {
@@ -207,8 +208,8 @@ export default {
         data.allowed_ip_ranges = ranges
         this.contest = data
         this.initTime()
-      }).catch(() => {
-      })
+      } catch (err) {
+      }
     }
   },
   methods: {
@@ -224,10 +225,11 @@ export default {
         }
       }
       data.allowed_ip_ranges = ranges
-      await api[funcName](data).then(async res => {
+      try {
+        await api[funcName](data)
         await this.$router.push({ name: 'contest-list', query: { refresh: 'true' } })
-      }).catch(() => {
-      })
+      } catch (err) {
+      }
     },
     initTime () {
       ;[this.startDate, this.startTime] = this.contest.start_time.split(/T|[+]/)
