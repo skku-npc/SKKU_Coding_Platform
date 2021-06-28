@@ -552,6 +552,11 @@ export default {
       data.spj_language = data.spj_language || 'C'
       this.problem = data
       this.testCaseUploaded = true
+      const testcaseRes = await api.getTestCase(this.$route.params.problemID)
+      const testcaseData = testcaseRes.data.data
+      this.problem.testcases = this.problem.testcases.concat(testcaseData.testcase)
+      if (testcaseData.spj === 'True') this.problem.spj = true
+      else this.problem.spj = false
     } else {
       this.title = this.$i18n.t('m.Add_Problem')
       for (const item of allLanguage.languages) {
@@ -608,7 +613,7 @@ export default {
           await this.$confirm('If you change problem judge method, you need to re-upload test cases', 'Warning', 'warning', false)
           this.problem.spj = !this.problem.spj
           this.resetTestCase()
-        } catch (res) {
+        } catch (err) {
         }
       } else {
         this.problem.spj = !this.problem.spj
@@ -620,7 +625,7 @@ export default {
           await this.$confirm('If you change upload method, you need to re-upload testcases', 'Warning', 'warning', false)
           this.testcase_file_upload = !this.testcase_file_upload
           this.resetTestCase()
-        } catch (res) {
+        } catch (err) {
         }
       } else {
         this.testcase_file_upload = !this.testcase_file_upload
@@ -698,14 +703,14 @@ export default {
         this.loadingCompile = false
         this.problem.spj_compile_ok = true
         this.error.spj = ''
-      } catch (res) {
+      } catch (err) {
         this.loadingCompile = false
         this.problem.spj_compile_ok = false
         const h = this.$createElement
         this.$msgbox({
           title: 'Compile Error',
           type: 'error',
-          message: h('pre', res.data.data),
+          message: h('pre', err.data.data),
           showCancelButton: false,
           closeOnClickModal: false,
           customClass: 'dialog-compile-error'
@@ -765,7 +770,7 @@ export default {
               this.$error('Invalid test case score')
               return
             }
-          } catch (res) {
+          } catch (err) {
             this.$error('Test case score must be an integer')
             return
           }
@@ -813,11 +818,14 @@ export default {
         } catch (err) {
         }
       } else {
-        await api[funcName](this.problem)
-        if (this.routeName === 'create-contest-problem' || this.routeName === 'edit-contest-problem') {
-          this.$router.push({ name: 'contest-problem-list', params: { contestId: this.$route.params.contestId } })
-        } else {
-          this.$router.push({ name: 'problem-list' })
+        try {
+          await api[funcName](this.problem)
+          if (this.routeName === 'create-contest-problem' || this.routeName === 'edit-contest-problem') {
+            this.$router.push({ name: 'contest-problem-list', params: { contestId: this.$route.params.contestId } })
+          } else {
+            this.$router.push({ name: 'problem-list' })
+          }
+        } catch (err) {
         }
       }
     }

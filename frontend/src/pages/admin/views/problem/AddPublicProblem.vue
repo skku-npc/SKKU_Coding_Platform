@@ -80,7 +80,7 @@ export default {
       const res = await api.getContest(this.contestID)
       this.contest = res.data.data
       this.getPublicProblem()
-    } catch (res) {
+    } catch (err) {
     }
   },
   methods: {
