@@ -261,7 +261,7 @@ export default {
         await api[funcName](announcementId)
         this.loading = true
         await this.init()
-      } finally {
+      } catch (err) {
         this.loading = true
       }
     },
