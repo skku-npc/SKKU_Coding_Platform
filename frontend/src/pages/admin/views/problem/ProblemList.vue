@@ -225,14 +225,8 @@ export default {
       try{
         await this.$confirm('Sure to delete this problem? The associated submissions will be deleted as well.', 'Delete Problem', 'warning', false)
         const funcName = this.routeName === 'problem-list' ? 'deleteProblem' : 'deleteContestProblem'
-        try {
-          await api[funcName](id)
-          try {
-            await this.getProblemList(this.currentPage - 1)
-          } catch (err) {
-          }
-        } catch (err) {
-        }
+        await api[funcName](id)
+        await this.getProblemList(this.currentPage - 1)
       } catch (err) {
       }
     },
