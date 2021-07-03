@@ -80,7 +80,7 @@ export default {
       try {
         const res = await api.getInvalidTestCaseList()
         this.data = res.data.data
-      } catch (res) {
+      } catch (err) {
       }
     },
     async deleteTestCase (id) {

@@ -455,7 +455,7 @@ export default {
         // 업데이트 목록
         await this.getUserList(this.currentPage)
         this.showUserDialog = false
-      } catch (res) {
+      } catch (err) {
       }
     },
     // 사용자 대화 상자 열기
@@ -471,7 +471,7 @@ export default {
         const res = await api.getUserList((page - 1) * this.pageSize, this.pageSize, this.keyword)
         this.total = res.data.data.total
         this.userList = res.data.data.results
-      } catch (res) {
+      } catch (err) {
       } finally {
         this.loadingTable = false
       }
@@ -479,15 +479,14 @@ export default {
     async deleteUsers (ids) {
       try {
         await this.$confirm('Sure to delete the user? The associated resources created by this user will be deleted as well, like problem, contest, announcement, etc.', 'confirm', 'warning', false)
-        try {
-          await api.deleteUsers(ids.join(','))
-          await this.getUserList(this.currentPage)
-          this.selectedUserIDs = []
-        } catch (err) {
-          await this.getUserList(this.currentPage)
-          this.selectedUserIDs = []
-        }
       } catch (err) {
+      }
+      try {
+        await api.deleteUsers(ids.join(','))
+      } catch (err) {
+      } finally {
+        await this.getUserList(this.currentPage)
+        this.selectedUserIDs = []
       }
     },
     generateUser () {

@@ -319,9 +319,7 @@ export default {
     async getContestProblems () {
       const res = await this.$store.dispatch('getContestProblems')
       if (this.isAuthenticated) {
-        if (this.contestRuleType === 'ACM') {
-          this.addStatusColumn(this.ACMTableColumns, res.data.data)
-        } else if (this.OIContestRealTimePermission) {
+        if (this.contestRuleType === 'ACM' || this.OIContestRealTimePermission) {
           this.addStatusColumn(this.ACMTableColumns, res.data.data)
         }
       }
@@ -384,7 +382,7 @@ export default {
           } else {
             this.refreshStatus = setTimeout(checkStatus, 2000)
           }
-        } catch (res) {
+        } catch (err) {
           this.submitting = false
           clearTimeout(this.refreshStatus)
         }
@@ -425,9 +423,9 @@ export default {
           }
           this.submitted = true
           this.checkSubmissionStatus()
-        } catch (res) {
+        } catch (err) {
           this.getCaptchaSrc()
-          if (res.data.data.startsWith('Captcha is required')) {
+          if (err.data.data.startsWith('Captcha is required')) {
             this.captchaRequired = true
           }
           this.submitting = false
