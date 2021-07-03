@@ -251,8 +251,7 @@ export default {
   },
   async mounted () {
     try {
-      const resSMTP = await api.getSMTPConfig()
-      const resWeb = await api.getWebsiteConfig()
+      const [resSMTP, resWeb] = await Promise.all([api.getSMTPConfig(), api.getWebsiteConfig()])
       if (resSMTP.data.data) {
         this.smtp = resSMTP.data.data
       } else {
@@ -265,18 +264,11 @@ export default {
   },
   methods: {
     async saveSMTPConfig () {
-      if (!this.init) {
-        try {
-          await api.editSMTPConfig(this.smtp)
-          this.saved = true
-        } catch (err) {
-        }
-      } else {
-        try {
-          await api.createSMTPConfig(this.smtp)
-          this.saved = true
-        } catch (err) {
-        }
+      try {
+        const funcName = this.init ? 'createSMTPConfig' : 'editSMTPConfig'
+        await api[funcName](this.smtp)
+        this.saved = true
+      } catch (err) {
       }
     },
     async testSMTPConfig () {
@@ -293,13 +285,10 @@ export default {
           }
         })
         this.loadingBtnTest = true
-        try {
-          await api.testSMTPConfig(value)
-        } catch (err) {
-        } finally {
-          this.loadingBtnTest = false
-        }
+        await api.testSMTPConfig(value)
       } catch (err) {
+      } finally {
+        this.loadingBtnTest = false
       }
     },
     async saveWebsiteConfig () {
