@@ -134,10 +134,9 @@ export default {
       }
     })
     const user = this.$store.getters.user
-    const res = await api.getUser(user.username)
+    const [res, infoRes] = await Promise.all([api.getUser(user.username), api.getUserInfo(user.username)])
     this.formProfile.major = res.data.data.major
     this.formEmail.old_email = res.data.data.email
-    const infoRes = await api.getUserInfo(user.username)
     this.formProfile.language = infoRes.data.data.language
   },
   methods: {
@@ -148,7 +147,6 @@ export default {
         const res = await api.updateProfile(updateData)
         this.$success('Success')
         this.$store.commit(types.CHANGE_PROFILE, { profile: res.data.data })
-        this.loading.btnLanguage = false
       } catch (err) {
       } finally {
         this.loading.btnLanguage = false

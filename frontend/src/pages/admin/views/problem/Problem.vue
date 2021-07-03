@@ -544,7 +544,7 @@ export default {
     if (this.mode === 'edit') {
       this.title = this.$i18n.t('m.Edit_Problem')
       const funcName = { 'edit-problem': 'getProblem', 'edit-contest-problem': 'getContestProblem' }[this.routeName]
-      const problemRes = await api[funcName](this.$rout.params.problemId)
+      const problemRes = await api[funcName](this.$route.params.problemId)
       const data = problemRes.data.data
       if (!data.spj_code) {
         data.spj_code = ''
@@ -556,7 +556,7 @@ export default {
       const testcaseData = testcaseRes.data.data
       this.problem.testcases = this.problem.testcases.concat(testcaseData.testcase)
       if (testcaseData.spj === 'True') this.problem.spj = true
-      else this.problem.spj = false
+      else this.problem.spj = testcaseData.spj === 'True'
     } else {
       this.title = this.$i18n.t('m.Add_Problem')
       for (const item of allLanguage.languages) {
@@ -810,7 +810,8 @@ export default {
           this.testCaseUploaded = true
           this.problem.test_case_id = response.data.data.id
           await api[funcName](this.problem)
-          if (this.routeName === 'create-contest-problem' || this.routeName === 'edit-contest-problem') {
+
+          if (['create-contest-problem', 'edit-contest-problem'].includes(this.routeName)) {
             this.$router.push({ name: 'contest-problem-list', params: { contestId: this.$route.params.contestId } })
           } else {
             this.$router.push({ name: 'problem-list' })
@@ -820,7 +821,7 @@ export default {
       } else {
         try {
           await api[funcName](this.problem)
-          if (this.routeName === 'create-contest-problem' || this.routeName === 'edit-contest-problem') {
+          if (['create-contest-problem', 'edit-contest-problem'].includes(this.routeName)) {
             this.$router.push({ name: 'contest-problem-list', params: { contestId: this.$route.params.contestId } })
           } else {
             this.$router.push({ name: 'problem-list' })
