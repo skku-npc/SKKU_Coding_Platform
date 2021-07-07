@@ -18,10 +18,12 @@ export default {
         })
       })
     },
-    getCaptchaSrc () {
-      api.getCaptcha().then(res => {
+    async getCaptchaSrc () {
+      try {
+        const res = await api.getCaptcha()
         this.captchaSrc = res.data.data
-      })
+      } catch (err) {
+      }
     }
   }
 }

@@ -489,7 +489,7 @@ export default {
         this.selectedUserIDs = []
       }
     },
-    generateUser () {
+    async generateUser () {
       this.loadingGenerate = true
       const data = Object.assign({}, this.formGenerateUser)
       try {
