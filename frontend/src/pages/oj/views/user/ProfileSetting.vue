@@ -177,9 +177,6 @@ export default {
         return this.$error('New password doesn\'t change')
       }
       delete data.again_password
-      if (!this.visible.tfaRequired) {
-        delete data.tfa_code
-      }
       try {
         await api.changePassword(data)
         this.loading.btnPassword = false
@@ -191,18 +188,12 @@ export default {
           this.$router.push({ name: 'logout' })
         }, 2500)
       } catch (err) {
-        if (err.data.data === 'tfa_required') {
-          this.visible.tfaRequired = true
-        }
         this.loading.btnPassword = false
       }
     },
     async changeEmail () {
       this.loading.btnEmail = true
       const data = Object.assign({}, this.formEmail)
-      if (!this.visible.tfaRequired) {
-        delete data.tfa_code
-      }
       try {
         await api.changeEmail(data)
         this.loading.btnEmail = false
@@ -210,9 +201,6 @@ export default {
         this.$success('Email changed successfully')
         this.formEmail.old_email = this.formEmail.new_email
       } catch (err) {
-        if (err.data.data === 'tfa_required') {
-          this.visible.tfaRequired = true
-        }
         this.loading.btnEmail = false
       }
     }
