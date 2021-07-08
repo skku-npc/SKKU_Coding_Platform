@@ -550,13 +550,14 @@ export default {
         data.spj_code = ''
       }
       data.spj_language = data.spj_language || 'C'
+      data.testcases = []
       this.problem = data
       this.testCaseUploaded = true
-      const testcaseRes = await api.getTestCase(this.$route.params.problemID)
+      const testcaseRes = await api.getTestCase(this.$route.params.problemId)
       const testcaseData = testcaseRes.data.data
-      this.problem.testcases = this.problem.testcases.concat(testcaseData.testcase)
+      this.problem.testcases = this.problem.testcases.concat(testcaseData.testcases)
       if (testcaseData.spj === 'True') this.problem.spj = true
-      else this.problem.spj = testcaseData.spj === 'True'
+      else this.problem.spj = false
     } else {
       this.title = this.$i18n.t('m.Add_Problem')
       for (const item of allLanguage.languages) {
