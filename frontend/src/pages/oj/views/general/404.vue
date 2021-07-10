@@ -1,32 +1,32 @@
 <template>
   <div class="error404">
     <div class="error404-body-con">
-      <Card>
+      <b-card>
         <div class="error404-body-con-title">
-          4<span><Icon type="ios-navigate-outline" /></span>4
+          4<span><b-icon icon="arrow-up-right-circle" /></span>4
         </div>
         <p class="error404-body-con-message">
           YOU&nbsp;&nbsp;LOOK&nbsp;&nbsp;LOST
         </p>
         <div class="error404-btn-con">
-          <Button
-            size="large"
+          <b-button
+            class="btn-gohome"
+            size="lg"
             style="width: 200px;"
-            type="ghost"
             @click="goHome"
           >
             {{ $t('m.Go_Home') }}
-          </Button>
-          <Button
-            size="large"
+          </b-button>
+          <b-button
+            class="btn-backpage"
+            size="lg"
             style="width: 200px;margin-left: 40px;"
-            type="primary"
             @click="backPage"
           >
             {{ $t('m.Back') }}
-          </Button>
+          </b-button>
         </div>
-      </Card>
+      </b-card>
     </div>
   </div>
 </template>
@@ -47,7 +47,7 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
   @keyframes error404animation {
     0% {
       transform: rotateZ(0deg);
@@ -85,7 +85,7 @@ export default {
         span {
           display: inline-block;
           color: #19be6b;
-          font-size: 230px;
+          font-size: 220px;
           animation: error404animation 3s ease 0s infinite alternate;
         }
       }
@@ -102,6 +102,40 @@ export default {
       text-align: center;
       padding: 20px 0;
       margin-bottom: 40px;
+    }
+  }
+
+  .btn-gohome {
+    color: #727272;
+    background-color: #fff;
+    border: 1px solid #dddee1;
+    &:hover {
+      color: #2d8cf0;
+      border-color: #2d8cf0;
+      background-color: #fff;
+    }
+    &:active {
+      background-color: #fff;
+    }
+    &:focus {
+      color: #2d8cf0;
+      border-color: #2d8cf0;
+      background-color: #2d8cf0;
+    }
+  }
+
+  .btn-backpage {
+    background-color: #2d8cf0;
+    &:hover {
+      border-color: #4a9af0;
+      background-color: #4a9af0;
+    }
+    &:active {
+      background-color: #4a9af0;
+    }
+    &:focus {
+      border-color: #4a9af0;
+      background-color: #4a9af0;
     }
   }
 </style>
