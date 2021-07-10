@@ -69,28 +69,28 @@
       <b-navbar-nav class="ml-auto">
         <b-nav-item v-if="statusVisible">
           <template v-if="!this.contestID || (this.contestID && OIContestRealTimePermission)">
-            <Tag
-              type="dot"
-              :color="submissionStatus.color"
+            <b-button
+              class="tag"
               @click.native="()=>{$refs.sidebar.onMySubmissionClicked({ID:submissionId})}"
             >
-              {{ submissionStatus.text }}
-            </Tag>
+              <b-icon icon="circle-fill" :style="{ color: submissionStatus.color }"/>{{ submissionStatus.text }}
+            </b-button>
           </template>
           <template v-else-if="this.contestID && !OIContestRealTimePermission">
-            <Tag type="dot" color="green">Submitted Succesfully</Tag>
+            <b-button class="tag">
+              <b-icon icon="circle-fill" variant="success"/>Submitted Succesfully
+            </b-button>
           </template>
         </b-nav-item>
         <b-nav-item v-else-if="problem.my_status === 0">
-          <Tag type="dot" color="green">You have solved the problem</Tag>
+          <b-button class="tag">
+            <b-icon icon="circle-fill" variant="success"/>You have solved the problem
+          </b-button>
         </b-nav-item>
         <b-nav-item v-else-if="this.contestID && !OIContestRealTimePermission && submissionExists">
-          <Tag type="dot" color="green">You have submitted a solution</Tag>
-        </b-nav-item>
-        <b-nav-item v-if="captchaRequired">
-          <img :src="captchaSrc" id="captcha-img">
-          <b-button @click="getCaptchaSrc">Refresh</b-button>
-          <b-form-input v-model="captchaCode" id="captcha-code"/>
+          <b-button class="tag">
+            <b-icon icon="circle-fill" variant="success"/>You have submitted a solution
+          </b-button>
         </b-nav-item>
         <b-nav-item>
           <b-button v-b-tooltip.hover class="btn-reset" title="Click to reset your code" @click="onResetToTemplate">
@@ -321,9 +321,9 @@ export default {
       this.$store.dispatch('getContestProblems').then(res => {
         if (this.isAuthenticated) {
           if (this.contestRuleType === 'ACM') {
-            this.addStatusColumn(this.ACMTableColumns, res.data.data)
+            // this.addStatusColumn(this.ACMTableColumns, res.data.data)
           } else if (this.OIContestRealTimePermission) {
-            this.addStatusColumn(this.ACMTableColumns, res.data.data)
+            // this.addStatusColumn(this.ACMTableColumns, res.data.data)
           }
         }
       })
@@ -736,4 +736,22 @@ export default {
     }
   }
 }
+</style>
+
+<style lang="scss" scoped>
+  .tag {
+    color: #495060;
+    background-color: #fff;
+    border: none;
+    font-size: 12px;
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+    .b-icon {
+      vertical-align: middle;
+      margin-right: 0.2rem;
+      font-size: 100%;
+    }
+  }
 </style>
