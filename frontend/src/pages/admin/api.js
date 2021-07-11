@@ -335,20 +335,19 @@ async function ajax (url, method, options) {
       data
     })
     if (res.data.error !== null) {
-      // Vue.prototype.$error(res.data.data)
+      Vue.prototype.$error(res.data.data)
       if (res.data.data.startsWith('Please login')) {
         router.push({ name: 'login' })
       }
-      throw res
+      return Promise.reject(res)
     } else {
-      // if (method !== 'get') {
-      //   Vue.prototype.$success('Succeeded')
-      // }
-      return res
+      if (method !== 'get') {
+        Vue.prototype.$success('Succeeded')
+      }
+      return Promise.resolve(res)
     }
   } catch (err) {
-    // Vue.prototype.$error(err.data.data)
-    console.log(err)
-    throw err
+    Vue.prototype.$error(err.data.data)
+    return Promise.reject(err)
   }
 }

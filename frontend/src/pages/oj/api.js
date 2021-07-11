@@ -258,16 +258,15 @@ async function ajax (url, method, options) {
       if (res.data.data.startsWith('Please login')) {
         store.dispatch('changeModalStatus', { mode: 'login', visible: true })
       }
-      throw res
+      return Promise.reject(res)
     } else {
-      // if (method !== 'get') {
-      //   Vue.prototype.$success('Succeeded')
-      // }
-      return res
+      if (method !== 'get') {
+        Vue.prototype.$success('Succeeded')
+      }
+      return Promise.resolve(res)
     }
   } catch (err) {
-    // Vue.prototype.$error(err.data.data)
-    console.log(err)
-    throw err
+    Vue.prototype.$error(err.data.data)
+    return Promise.reject(err)
   }
 }

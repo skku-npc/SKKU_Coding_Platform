@@ -44,54 +44,54 @@ function breakLongWords (value, length = 16) {
   return value.replace(re, '$1\n')
 }
 
-function downloadFile (url) {
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$http.get(url, { responseType: 'blob' }).then(resp => {
-      const headers = resp.headers
-      if (headers['content-type'].indexOf('json') !== -1) {
-        const fr = new window.FileReader()
-        if (resp.data.error) {
-          Vue.prototype.$error(resp.data.error)
+async function downloadFile (url) {
+  try {
+    const res = await Vue.prototype.$http.get(url, { responseType: 'blob' })
+    const headers = res.headers
+    if (headers['content-type'].indexOf('json') !== -1) {
+      const fr = new window.FileReader()
+      if (res.data.error) {
+        Vue.prototype.$error(res.data.error)
+      } else {
+        Vue.prototype.$error('Invalid file format')
+      }
+      fr.onload = (event) => {
+        const data = JSON.parse(event.target.result)
+        if (data.error) {
+          Vue.prototype.$error(data.data)
         } else {
           Vue.prototype.$error('Invalid file format')
         }
-        fr.onload = (event) => {
-          const data = JSON.parse(event.target.result)
-          if (data.error) {
-            Vue.prototype.$error(data.data)
-          } else {
-            Vue.prototype.$error('Invalid file format')
-          }
-        }
-        const b = new window.Blob([resp.data], { type: 'application/json' })
-        fr.readAsText(b)
-        return
       }
-      const link = document.createElement('a')
-      link.href = window.URL.createObjectURL(new window.Blob([resp.data], { type: headers['content-type'] }))
-      link.download = (headers['content-disposition'] || '').split('filename=')[1]
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-      resolve()
-    }).catch(() => {})
-  })
+      const b = new window.Blob([res.data], { type: 'application/json' })
+      fr.readAsText(b)
+      return
+    }
+    const link = document.createElement('a')
+    link.href = window.URL.createObjectURL(new window.Blob([res.data], { type: headers['content-type'] }))
+    link.download = (headers['content-disposition'] || '').split('filename=')[1]
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    return Promise.resolve(res)
+  } catch (err) {
+    return Promise.reject(err)
+  }
 }
 
-function getLanguages () {
-  return new Promise((resolve, reject) => {
-    const languages = storage.get(STORAGE_KEY.languages)
-    if (languages) {
-      resolve(languages)
-    }
-    ojAPI.getLanguages().then(res => {
-      const languages = res.data.data.languages
-      storage.set(STORAGE_KEY.languages, languages)
-      resolve(languages)
-    }, err => {
-      reject(err)
-    })
-  })
+async function getLanguages () {
+  const languages = storage.get(STORAGE_KEY.languages)
+  if (languages) {
+    return Promise.resolve(languages)
+  }
+  try {
+    const res = await ojAPI.getLanguages()
+    const languages = res.data.data.languages
+    storage.set(STORAGE_KEY.languages, languages)
+    return Promise.resolve(languages)
+  } catch (err) {
+    return Promise.reject(err)
+  }
 }
 
 export default {
