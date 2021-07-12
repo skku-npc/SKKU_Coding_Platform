@@ -21,7 +21,6 @@ const ContestDetail = () => import(/* webpackChunkName: "contest" */ '@oj/views/
 export {
   Home, NotFound,
   Logout, ProblemList, Announcement, AnnouncementList, Problem,
-  SubmissionList, SubmissionDetails,
   ApplyResetPassword, ResetPassword, EmailAuth, ProfileSetting,
   ContestList, ContestDetail
 }

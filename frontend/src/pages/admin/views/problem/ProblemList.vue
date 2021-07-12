@@ -161,13 +161,13 @@ export default {
     }
   },
   watch: {
-    '$route' (newVal, oldVal) {
+    async '$route' (newVal, oldVal) {
       this.contestId = newVal.params.contestId
       this.routeName = newVal.name
-      this.getProblemList(this.currentPage)
+      await this.getProblemList(this.currentPage)
     },
-    'keyword' () {
-      this.currentChange()
+    async 'keyword' () {
+      await this.currentChange()
     }
   },
   mounted () {
@@ -194,10 +194,10 @@ export default {
       }
     },
     // 切换页码回调
-    currentChange (page) {
+    async currentChange (page) {
       if (this.contestId !== '') {
         this.currentPage = page
-        this.getProblemList(page)
+        await this.getProblemList(page)
       }
     },
     async getProblemList (page = 1) {
@@ -222,7 +222,7 @@ export default {
       }
     },
     async deleteProblem (id) {
-      try{
+      try {
         await this.$confirm('Sure to delete this problem? The associated submissions will be deleted as well.', 'Delete Problem', 'warning', false)
         const funcName = this.routeName === 'problem-list' ? 'deleteProblem' : 'deleteContestProblem'
         await api[funcName](id)

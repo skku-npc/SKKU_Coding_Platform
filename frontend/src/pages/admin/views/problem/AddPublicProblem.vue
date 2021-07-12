@@ -71,15 +71,15 @@ export default {
     }
   },
   watch: {
-    'keyword' () {
-      this.getPublicProblem(this.page)
+    async 'keyword' () {
+      await this.getPublicProblem(this.page)
     }
   },
   async mounted () {
     try {
       const res = await api.getContest(this.contestID)
       this.contest = res.data.data
-      this.getPublicProblem()
+      await this.getPublicProblem()
     } catch (err) {
     }
   },
@@ -94,10 +94,11 @@ export default {
       }
       try {
         const res = await api.getProblemList(params)
-        this.loading = false
         this.total = res.data.data.total
         this.problems = res.data.data.results
       } catch (res) {
+      } finally {
+        this.loading = false
       }
     },
     async handleAddProblem () {
@@ -109,7 +110,7 @@ export default {
       try {
         await api.addProblemFromPublic(data)
         this.$emit('on-change')
-      } catch (res) {
+      } catch (err) {
       }
     },
     showConfirmModal (problemID) {
